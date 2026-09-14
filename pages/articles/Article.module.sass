@@ -1,0 +1,68 @@
+@use '../../styles/variables' as *
+@use '../../styles/mixins' as *
+
+.article
+  padding: 4rem
+  border-radius: $border-radius-onerem
+
+.backLink
+  display: inline-block
+  margin-bottom: 3rem
+  color: $primary-color
+  text-decoration: none
+  font-size: 2rem
+  transition: $transition
+
+  &:hover
+    color: $header-hover-color
+
+.title
+  font-size: 4rem
+  margin-bottom: 2rem
+
+.meta
+  display: flex
+  gap: 1rem
+  color: $gray-color
+  font-size: 2rem
+  margin-bottom: 3rem
+  padding-bottom: 2rem
+  border-bottom: .1rem solid $gray-color
+
+.content
+  font-size: 2rem
+  line-height: 1.8
+
+  h1, h2, h3
+    color: #1a1a2e
+    margin-top: 3rem
+    margin-bottom: 1.5rem
+
+  p
+    margin-bottom: 1.5rem
+
+  ul, ol
+    margin-bottom: 1.5rem
+    padding-left: 3rem
+
+  li
+    margin-bottom: 1rem
+
+  code
+    background: $border-form-color
+    padding: .2rem .5rem
+    border-radius: $border-radius-onerem
+    font-size: 2rem
+
+  pre
+    background: $header-background-color
+    color: $white-text-color
+    padding: 2rem
+    border-radius: $border-radius-onerem
+    overflow-x: auto
+    margin-bottom: 2rem
+
+    code
+      background: transparent
+      color: $white-text-color
+

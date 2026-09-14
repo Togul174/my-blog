@@ -1,0 +1,37 @@
+@use '../styles/variables.sass' as *
+@use '../styles/mixins.sass' as *
+
+.title
+  font-size: 4rem
+  margin-bottom: 3rem
+
+.empty
+  font-size: 2rem
+
+.list
+  list-style: none
+
+.card
+  padding: 2rem
+  margin-bottom: 2rem
+  border: .1rem solid
+  border-radius: $border-radius-onerem
+  transition: $transition
+
+  &Title
+    font-size: 2.5rem
+    font-weight: $font-weight-bold
+    text-decoration: none
+    color: black
+
+  &:hover
+    color: $header-hover-color
+
+  &Description
+    color: $gray-color
+    margin: 1rem 0
+    font-size: 1.5rem
+
+  &Meta
+    color: $gray-color
+    font-size: 1.5rem

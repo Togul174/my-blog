@@ -1,0 +1,36 @@
+@use '../../styles/variables' as *
+@use '../../styles/mixins' as *
+
+.header
+  background: $header-background-color
+  color: $white-text-color
+  padding: 3rem 0
+  margin-bottom: 5rem
+
+.headerContainer
+  @include flex-between
+
+.logo
+  font-size: 3rem
+  font-weight: $font-weight-bold
+  text-decoration: none
+  color: $white-text-color
+  transition: $transition
+
+  &:hover
+    color: $header-hover-color
+    text-decoration: none
+
+.nav
+  @include flex-center
+  gap: 3rem
+
+  a
+    color: $white-text-color
+    text-decoration: none
+    font-size: 2rem
+    transition: $transition
+
+    &:hover
+      color: $header-hover-color
+      text-decoration: none
