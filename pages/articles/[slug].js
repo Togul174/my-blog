@@ -1,8 +1,19 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from './Article.module.sass';
+import { getArticleBySlug } from '../../lib/articles';
 
-export default function ArticlePage({ article }) {
+export default function ArticlePage({ article, error }) {
+  if (error) {
+    return (
+      <div>
+        <h1 className={styles.title}>Ошибка</h1>
+        <p className={styles.error}>{error}</p>
+        <Link href="/" className={styles.backLink}>← Вернуться на главную</Link>
+      </div>
+    );
+  }
+
   if (!article) {
     return (
       <div>
@@ -45,14 +56,26 @@ export default function ArticlePage({ article }) {
 
 export async function getServerSideProps({ params }) {
   const { slug } = params;
-  const res = await fetch(`http://localhost:3000/api/articles/${slug}`);
 
-  if (res.status === 404) {
-    return { notFound: true };
+  try {
+    const article = await getArticleBySlug(slug);
+
+    if (!article) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        article,
+        error: null,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        article: null,
+        error: 'Не удалось загрузить статью',
+      },
+    };
   }
-  const article = await res.json();
-
-  return {
-    props: { article },
-  };
 }

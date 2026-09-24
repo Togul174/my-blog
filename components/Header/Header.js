@@ -10,7 +10,7 @@ export default function Header() {
         </Link>
         <nav className={styles.nav}>
           <Link href="/">Главная</Link>
-          <Link href="/admin">Управление блогом</Link>
+          <Link href="/admin?admin=true">Управление блогом</Link>
         </nav>
       </div>
     </header>
