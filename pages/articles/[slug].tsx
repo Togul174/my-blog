@@ -1,9 +1,16 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import type { GetServerSideProps } from 'next';
 import styles from './Article.module.sass';
 import { getArticleBySlug } from '../../lib/articles';
+import type { Article } from '../../types/article';
 
-export default function ArticlePage({ article, error }) {
+interface ArticlePageProps {
+  article: Article | null;
+  error: string | null;
+}
+
+export default function ArticlePage({ article, error }: ArticlePageProps) {
   if (error) {
     return (
       <div>
@@ -54,8 +61,12 @@ export default function ArticlePage({ article, error }) {
   );
 }
 
-export async function getServerSideProps({ params }) {
-  const { slug } = params;
+export const getServerSideProps: GetServerSideProps<ArticlePageProps> = async ({ params }) => {
+  const slug = params?.slug;
+
+  if (!slug || typeof slug !== 'string') {
+    return { notFound: true };
+  }
 
   try {
     const article = await getArticleBySlug(slug);
@@ -78,4 +89,4 @@ export async function getServerSideProps({ params }) {
       },
     };
   }
-}
+};
