@@ -1,6 +1,11 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllArticles } from '../../lib/articles';
+import type { ArticlePreview, ApiError } from '../../types/article';
 
-export default function handler(req, res) {
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ArticlePreview[] | ApiError>
+) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Метод не разрешен' });
   }

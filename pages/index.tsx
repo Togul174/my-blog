@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import Head from 'next/head';
+import type { GetServerSideProps } from 'next';
 import styles from './Home.module.sass';
 import { getAllArticles } from '../lib/articles';
+import type { ArticlePreview } from '../types/article';
 
-export default function Home({ articles = [], error }) {
+interface HomeProps {
+  articles: ArticlePreview[];
+  error: string | null;
+}
+
+export default function Home({ articles = [], error }: HomeProps) {
   return (
     <>
       <Head>
@@ -42,7 +49,7 @@ export default function Home({ articles = [], error }) {
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   try {
     const articles = getAllArticles();
     return {
@@ -59,4 +66,4 @@ export async function getServerSideProps() {
       },
     };
   }
-}
+};

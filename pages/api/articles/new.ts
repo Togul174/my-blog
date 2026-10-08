@@ -1,18 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllArticles } from '../../../lib/articles';
 import { temporaryArticles } from '../../../lib/store';
+import type { StoredArticle, CreateArticleDto, ApiError } from '../../../types/article';
+import { makeSlug } from '../../../lib/slug';
 
-function makeSlug(title) {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-zа-я0-9\s-]/gi, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 50) || 'article';
-}
-
-function makeUniqueSlug(title) {
+function makeUniqueSlug(title: string): string {
   const baseSlug = makeSlug(title);
 
   const existingSlugs = [
@@ -34,7 +26,15 @@ function makeUniqueSlug(title) {
   return uniqueSlug;
 }
 
-export default function handler(req, res) {
+interface SuccessResponse {
+  message: string;
+  article: StoredArticle;
+}
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<SuccessResponse | ApiError>
+) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Метод не разрешен' });
   }
@@ -43,16 +43,16 @@ export default function handler(req, res) {
     return res.status(400).json({ message: 'Тело запроса должно быть JSON' });
   }
 
-  const { title, description, author, content } = req.body;
+  const { title, description, author, content } = req.body as CreateArticleDto;
 
   if (!title?.trim()) {
-    return res.status(400).json({ message: 'Поле "Заголовок" обязательно' });
+    return res.status(400).json({ message: 'Поле "title" обязательно' });
   }
   if (!content?.trim()) {
-    return res.status(400).json({ message: 'Поле "Содержание" обязательно' });
+    return res.status(400).json({ message: 'Поле "content" обязательно' });
   }
 
-  const newArticle = {
+  const newArticle: StoredArticle = {
     slug: makeUniqueSlug(title),
     title: title.trim(),
     description: description?.trim() || '',

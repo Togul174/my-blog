@@ -1,8 +1,23 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import type { NextPage } from 'next';
 import styles from './Admin.module.sass';
+import type { StoredArticle } from '../types/article';
 
-export default function AdminPage() {
+interface SuccessResponse {
+  message: string;
+  article: StoredArticle;
+}
+
+interface ErrorResponse {
+  message: string;
+}
+
+type AdminPageWithLayout = NextPage & {
+  layout?: 'admin';
+};
+
+const AdminPage: AdminPageWithLayout = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [author, setAuthor] = useState('');
@@ -21,7 +36,7 @@ export default function AdminPage() {
     return () => clearTimeout(timer);
   }, [message]);
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setMessage('');
@@ -34,15 +49,16 @@ export default function AdminPage() {
         body: JSON.stringify({ title, description, author, content }),
       });
 
-      const data = await res.json();
+      const data: SuccessResponse | ErrorResponse = await res.json();
 
       if (!res.ok) {
         setIsError(true);
-        setMessage(data.message || 'Ошибка при создании статьи');
+        setMessage((data as ErrorResponse).message || 'Ошибка при создании статьи');
         return;
       }
 
-      setMessage(`Статья "${data.article.title}" создана! (slug: ${data.article.slug})`);
+      const successData = data as SuccessResponse;
+      setMessage(`Статья "${successData.article.title}" создана! (slug: ${successData.article.slug})`);
 
       setTitle('');
       setDescription('');
@@ -50,7 +66,7 @@ export default function AdminPage() {
       setContent('');
     } catch (error) {
       setIsError(true);
-      setMessage('Ошибка сети: ' + error.message);
+      setMessage('Ошибка сети: ' + (error as Error).message);
     }
   }
 
@@ -123,6 +139,8 @@ export default function AdminPage() {
       </div>
     </>
   );
-}
+};
 
 AdminPage.layout = 'admin';
+
+export default AdminPage;
